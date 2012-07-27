@@ -5,7 +5,7 @@ $pages = $cArray;
 $th = Loader::helper('text');
 ?>
 
-<div class="onepage-container">
+<div class="nb_sections">
 
 	<?php foreach ($pages as $page):
 
@@ -28,7 +28,7 @@ $th = Loader::helper('text');
 		
 		 ?>
 
-		<div id="<?=$title?>" class="section">
+		<div id="<?=$title?>" class="nb_section">
             <?php 
 
 			$GLOBALS["one_page_render"] = TRUE;
