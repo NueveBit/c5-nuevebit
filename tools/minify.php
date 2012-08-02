@@ -18,7 +18,10 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
     foreach ($files as $file) {
         list($name, $pkg) = explode(";", $file);
 
-        $sources[] = $resolvePath($name, $pkg);
+        $source = $resolvePath($name, $pkg);
+        if ($source) {
+            $sources[] = $source;
+        }
     }
 
     $options = array(
@@ -50,7 +53,7 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
 
 function resolveJs($file, $pkgHandle) {
     if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, DISPATCHER_FILENAME) > -1) {
-        $path = $file;
+        return null;
     }
 
     if (file_exists(DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
@@ -73,7 +76,7 @@ function resolveJs($file, $pkgHandle) {
 function resolveCss($file, $pkgHandle) {
     // if the first character is a / then that means we just go right through, it's a direct path
     if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, DISPATCHER_FILENAME) > -1) {
-        $path = $file;
+        return null;
     }
     
     $currentThemeDirectory = PageTheme::getSiteTheme()->getThemeDirectory();

@@ -12,6 +12,9 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
     define('DIRNAME_PACKAGES', 'packages');
 	define('DIR_BASE_CORE', dirname(__FILE__) . '/concrete');
     define('DIRNAME_CSS', 'css');
+    define('DIR_FILES_THEMES', DIR_BASE . '/themes');
+    define('DIR_FILES_THEMES_CORE', DIR_BASE_CORE . '/themes');
+    define('DIR_FILES_THEMES_CORE_ADMIN', DIR_BASE_CORE . '/themes/core');
 
     require_once(DIR_BASE . '/config/site.php');
     
@@ -39,7 +42,10 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
     foreach ($files as $file) {
         list($name, $pkg) = explode(";", $file);
 
-        $sources[] = $resolvePath($name, $pkg);
+        $source = $resolvePath($name, $pkg);
+        if ($source) {
+            $sources[] = $source;
+        }
     }
 
     $options = array(
@@ -71,7 +77,7 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
 
 function resolveJs($file, $pkgHandle) {
     if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, "index.php") > -1) {
-        $path = $file;
+        return null;
     }
 
     if (file_exists(DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
@@ -95,13 +101,16 @@ function resolveCss($file, $pkgHandle) {
     $path = '';
     // if the first character is a / then that means we just go right through, it's a direct path
     if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, "index.php") > -1) {
-        $path = $file;
+        return null;
     }
     
-    $currentThemeDirectory = DIR_BASE . '/themes/shintai';
-    // checking the theme directory for it. It's just in the root.
-    if ($currentThemeDirectory != '' && file_exists($currentThemeDirectory . '/' . $file)) {
-        $path = $currentThemeDirectory . '/' . $file;
+    $currentTheme = $_GET["v"];
+    if (isset($currentTheme) && $currentTheme != "") {
+        $currentThemeDirectory = DIR_FILES_THEMES . '/' . $currentTheme;
+        
+        if ($currentThemeDirectory != '' && file_exists($currentThemeDirectory . '/' . $file)) {
+            $path = $currentThemeDirectory . '/' . $file;
+        }
     } else if (file_exists(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file)) {
         $path = DIR_BASE . '/' . DIRNAME_CSS . '/' . $file;
     } else if ($pkgHandle != null) {

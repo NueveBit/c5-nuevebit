@@ -104,7 +104,9 @@ class MinifyHelper {
         foreach ($sources as $source) {
             list($name, $type, $pkg) = $this->getFileInfo($source);
 
-            if (!$type) {
+            // if no type can be assumed we fail
+            // also, we do not minify tiny_mce or we get errors!
+            if (!$type || $name == "tiny_mce/tiny_mce.js") {
                 print $source;
                 continue;
             }

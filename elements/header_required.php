@@ -65,12 +65,10 @@ var CCM_REL = "<?php  echo DIR_REL?>";
 <?php 
 $html = Loader::helper('html');
 
-$this->addFooterItem($html->javascript('jquery.js'), 'CORE');
-
-//if ($u->isRegistered()) {
+if ($u->isRegistered()) {
     $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
     $this->addFooterItem($html->javascript('ccm.base.js', false, true), 'CORE');
-//}
+}
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
 $appleIconFID =intval(Config::get('IPHONE_HOME_SCREEN_THUMBNAIL_FID'));
@@ -103,8 +101,11 @@ if (is_object($cp)) {
 	}	
 
 }
+?>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
 
+<?php
 $mh = Loader::helper("minify", "nuevebit");
 $mh->outputItems($this->getHeaderItems());
 
@@ -114,3 +115,5 @@ if (empty($disableTrackingCode) && $_trackingCodePosition === 'top') {
 	echo Config::get('SITE_TRACKING_CODE');
 }
 echo $c->getCollectionAttributeValue('header_extra_content');
+
+?>

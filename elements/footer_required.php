@@ -7,8 +7,6 @@ if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingC
 
 ?>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-
 <?php
 
 $mh = Loader::helper("minify", "nuevebit");
