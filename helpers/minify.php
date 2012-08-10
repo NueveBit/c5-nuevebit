@@ -119,7 +119,7 @@ class MinifyHelper {
                 $name .= ";$pkg";
             }
 
-            $this->addTargetFile(&$targetFiles, $name, $type);
+            $this->addTargetFile($targetFiles, $name, $type);
         }
 
         if (defined('MINIFY_SCRIPT')) {
@@ -146,7 +146,7 @@ class MinifyHelper {
         return array($cssUrl, $jsUrl);
     }
 
-    private function addTargetFile($targetFiles, $file, $type) {
+    private function addTargetFile(&$targetFiles, $file, $type) {
         if (!$targetFiles[$type]) {
             $targetFiles[$type] = $file;
         } else {

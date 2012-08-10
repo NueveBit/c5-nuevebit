@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $pages = $cArray;
-$th = Loader::helper('text');
 ?>
 
 <div class="nb_sections">

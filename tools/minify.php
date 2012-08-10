@@ -52,10 +52,26 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
 }
 
 function resolveJs($file, $pkgHandle) {
-    if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, DISPATCHER_FILENAME) > -1) {
-        return null;
+    if (substr($file, 0, 1) == '/') {
+
+        // let's try to guess the path
+        if ($pkgHandle == null && strpos($file, "packages/") !== false) {
+            $path = substr($file, strpos($file, "packages/") + 9);
+            
+            if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $path)) {
+                $path = DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $path;
+            } else {
+                $path = DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $path;
+            }
+            
+            return $path;
+        }
     }
 
+    if (substr($file, 0, 4) == 'http' || strpos($file, "index.php") > -1) {
+        return null;
+    }
+    
     if (file_exists(DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
         $path = DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file;
     } else if ($pkgHandle != null) {
@@ -74,8 +90,23 @@ function resolveJs($file, $pkgHandle) {
 }
 
 function resolveCss($file, $pkgHandle) {
-    // if the first character is a / then that means we just go right through, it's a direct path
-    if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, DISPATCHER_FILENAME) > -1) {
+    if (substr($file, 0, 1) == '/') {
+
+        // let's try to guess the path
+        if ($pkgHandle == null && strpos($file, "packages/") !== false) {
+            $path = substr($file, strpos($file, "packages/") + 9);
+            
+            if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $path)) {
+                $path = DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $path;
+            } else {
+                $path = DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $path;
+            }
+            
+            return $path;
+        }
+    }
+
+    if (substr($file, 0, 4) == 'http' || strpos($file, "index.php") > -1) {
         return null;
     }
     
