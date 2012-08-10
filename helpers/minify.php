@@ -16,8 +16,8 @@ class MinifyHelper {
      * 
      * @param type $sources HeaderOutputItems
      */
-    public function outputItems($sources) {
-        $this->includeItems($sources);
+    public function outputItems($sources, $type) {
+        $this->includeItems($sources, $type);
     }
 
     private function getFileInfo($source) {
@@ -78,16 +78,16 @@ class MinifyHelper {
         return str_replace($replace, "", $source);
     }
 
-    private function includeItems($sources) {
+    private function includeItems($sources, $type) {
         if (defined('MINIFY_ENABLE') && MINIFY_ENABLE) {
-            list($cssUrl, $jsUrl) = $this->minifyUrl($sources);
+            list($cssUrl, $jsUrl) = $this->minifyUrl($sources, $type);
+            Log::addEntry("css: " . $cssUrl);
+            Log::addEntry("js: " . $jsUrl);
 
-            if ($jsUrl) {
-                echo "<script src='$jsUrl' type='text/javascript'></script> ";
-            }
-
-            if ($cssUrl) {
-                echo "<link rel='stylesheet' type='text/css' href='$cssUrl' />";
+            if ($jsUrl != null && $type == "js") {
+                print "<script src='$jsUrl' type='text/javascript'></script> ";
+            } else if ($cssUrl != null && $type == "css") {
+                print "<link rel='stylesheet' type='text/css' href='$cssUrl' />";
             }
         } else {
             foreach ($sources as $source) {
@@ -96,7 +96,7 @@ class MinifyHelper {
         }
     }
 
-    private function minifyUrl($sources) {
+    private function minifyUrl($sources, $urlType) {
         $targetFiles = array();
         $targetFiles["css"] = "";
         $targetFiles["js"] = "";
@@ -108,6 +108,10 @@ class MinifyHelper {
             // also, we do not minify tiny_mce or we get errors!
             if (!$type || $name == "tiny_mce/tiny_mce.js") {
                 print $source;
+                continue;
+            }
+
+            if ($type != $urlType) {
                 continue;
             }
 

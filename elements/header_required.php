@@ -101,13 +101,19 @@ if (is_object($cp)) {
 	}	
 
 }
+
+if (defined('MINIFY_USE_CDN') && MINIFY_USE_CDN):
 ?>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
 
 <?php
+else:
+    echo $html->javascript("jquery.js");
+endif;
+
 $mh = Loader::helper("minify", "nuevebit");
-$mh->outputItems($this->getHeaderItems());
+$mh->outputItems($this->getHeaderItems(), "css");
 
 //$this->controller->outputHeaderItems();
 $_trackingCodePosition = Config::get('SITE_TRACKING_CODE_POSITION');
