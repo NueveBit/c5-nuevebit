@@ -10,7 +10,14 @@ if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingC
 <?php
 
 $mh = Loader::helper("minify", "nuevebit");
-$mh->outputItems(array_merge($this->getHeaderItems(), $this->getFooterItems()), "js");
+
+if (defined('MINIFY_ENABLE') && MINIFY_ENABLE) {
+    $items = array_merge($this->getHeaderItems(), $this->getFooterItems());
+} else {
+    $items = $this->getFooterItems();
+}
+
+$mh->outputItems($items, "js");
 //print $this->controller->outputFooterItems();
 
 ?>

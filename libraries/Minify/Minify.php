@@ -262,10 +262,11 @@ class Minify {
             $headers = $cg->getHeaders();
             unset($cg);
         }
-        
+
         if (self::$_options['contentType'] === self::TYPE_CSS
             && self::$_options['rewriteCssUris']) {
             foreach($controller->sources as $key => $source) {
+
                 if ($source->filepath 
                     && !isset($source->minifyOptions['currentDir'])
                     && !isset($source->minifyOptions['prependRelativePath'])

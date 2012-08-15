@@ -81,8 +81,6 @@ class MinifyHelper {
     private function includeItems($sources, $type) {
         if (defined('MINIFY_ENABLE') && MINIFY_ENABLE) {
             list($cssUrl, $jsUrl) = $this->minifyUrl($sources, $type);
-            Log::addEntry("css: " . $cssUrl);
-            Log::addEntry("js: " . $jsUrl);
 
             if ($jsUrl != null && $type == "js") {
                 print "<script src='$jsUrl' type='text/javascript'></script> ";
@@ -116,6 +114,11 @@ class MinifyHelper {
             }
 
             if ($name == "jquery.js") {
+                continue;
+            }
+
+            // since we compile less files, we can avoid including the js compiler
+            if (preg_match("/^less(-.*)?(.min)?.js$/", $name) == 1) {
                 continue;
             }
             
