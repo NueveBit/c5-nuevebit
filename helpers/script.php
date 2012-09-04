@@ -41,4 +41,12 @@ class ScriptHelper extends HtmlHelper {
     }
 }
 
+class LessOutputObject extends HeaderOutputObject {
+
+	public function __toString() {
+		return '<link rel="stylesheet" type="text/css" href="' . $this->file . '" />';
+	}
+	
+}
+
 ?>

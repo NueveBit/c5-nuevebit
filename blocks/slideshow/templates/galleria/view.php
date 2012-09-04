@@ -1,8 +1,10 @@
 <?php   
 defined('C5_EXECUTE') or die("Access Denied."); 
 
+$galleriaThemeUri = "galleria/themes/nuevebit/galleria.simple.js";
+
 $html = Loader::helper("html");
-$galleriaTheme = $html->javascript("themes/slideshow/galleria.slideshow.js", "nuevebit");
+$galleriaTheme = $html->javascript($galleriaThemeUri, "nuevebit");
 ?>
 
 <script type="text/javascript">
@@ -17,7 +19,6 @@ $(function(){
     data.push({
         image: "<?=$file->getRelativePath()?>"
     });
-
     <?php
     endforeach;
     ?>

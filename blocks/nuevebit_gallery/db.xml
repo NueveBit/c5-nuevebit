@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <schema version="0.3">
 
-	<table name="btSlideshow">
+	<table name="btNuevebitGallery">
 		<field name="bID" type="I">
 			<key />
 			<unsigned />
@@ -12,8 +12,8 @@
 		<field name="fadeDuration" type="I"><unsigned /></field>
 	</table>
 	
-	<table name="btSlideshowImg">
-		<field name="slideshowImgId" type="I">
+	<table name="btNuevebitGalleryImg">
+		<field name="id" type="I">
 			<key />
 			<autoincrement />
 			<unsigned />

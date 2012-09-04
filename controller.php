@@ -6,7 +6,7 @@ class NuevebitPackage extends Package {
 
 	protected $pkgHandle = 'nuevebit';
 	protected $appVersionRequired = '5.5.0';
-	protected $pkgVersion = '0.2.2'; 
+	protected $pkgVersion = '0.3.3'; 
 	
 	public function getPackageName() {
 		return t("9Bit"); 
@@ -41,7 +41,8 @@ class NuevebitPackage extends Package {
          */
         
         // install 'nuevebit page list' block
-		BlockType::installBlockTypeFromPackage('nuevebit_page_list', $this);
+//		BlockType::installBlockTypeFromPackage('nuevebit_page_list', $this);
+		BlockType::installBlockTypeFromPackage('nuevebit_gallery', $this);
     }
 	
 	public function install() {
@@ -61,6 +62,7 @@ class NuevebitPackage extends Package {
 
         // install 'one page' block
 		BlockType::installBlockTypeFromPackage('nuevebit_page_list', $pkg);
+		BlockType::installBlockTypeFromPackage('nuevebit_gallery', $pkg);
 
 		// install 'one page' page type
 //        $data = array("ctHandle" => "one_page", "ctName" => "One Page");

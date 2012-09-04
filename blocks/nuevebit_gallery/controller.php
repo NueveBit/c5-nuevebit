@@ -1,17 +1,17 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-class NuevebitGalleryController extends BlockController {
+class NuevebitGalleryBlockController extends BlockController {
 	
-	protected $btTable = 'btSlideshow';
+	protected $btTable = 'btNuevebitGallery';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "400";
 	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = true;
-	protected $btCacheBlockOutputForRegisteredUsers = true;
+//	protected $btCacheBlockOutputForRegisteredUsers = true;
 
 	protected $btExportFileColumns = array('fID');
-	protected $btExportTables = array('btSlideshow','btSlideshowImg');
+	protected $btExportTables = array('btNuevebitGallery','btNuevebitGalleryImg');
 
 	public $defaultDuration = 5;	
 	public $defaultFadeDuration = 2;	
@@ -22,12 +22,17 @@ class NuevebitGalleryController extends BlockController {
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
-		return t("Display a running loop of images.");
+		return t("Nuevebit Image Galleries.");
 	}
 	
 	public function getBlockTypeName() {
-		return t("Slideshow");
+		return t("Nuevebit Gallery");
 	}
+
+    public function on_page_view() {
+        $html = Loader::helper("html");
+        $this->addFooterItem($html->javascript("galleria.js", "nuevebit"));
+    }
 	
 	public function getJavaScriptStrings() {
 		return array(
@@ -99,14 +104,14 @@ class NuevebitGalleryController extends BlockController {
 		if( !array_key_exists($this->playback,$sortChoices) ) 
 			$this->playback='ORDER';
 		if(intval($this->bID)==0) return array();
-		$sql = "SELECT * FROM btSlideshowImg WHERE bID=".intval($this->bID).' ORDER BY '.$sortChoices[$this->playback];
+		$sql = "SELECT * FROM btNuevebitGalleryImg WHERE bID=".intval($this->bID).' ORDER BY '.$sortChoices[$this->playback];
 		$db = Loader::db();
 		$this->images=$db->getAll($sql); 
 	}
 	
 	function delete(){
 		$db = Loader::db();
-		$db->query("DELETE FROM btSlideshowImg WHERE bID=".intval($this->bID));		
+		$db->query("DELETE FROM btNuevebitGalleryImg WHERE bID=".intval($this->bID));		
 		parent::delete();
 	}
 	
@@ -148,7 +153,7 @@ class NuevebitGalleryController extends BlockController {
 		$this->loadBlockInformation();
 		$db = Loader::db();
 		foreach($this->images as $im) {
-			$db->Execute('insert into btSlideshowImg (bID, fID, url, duration, fadeDuration, groupSet, position, imgHeight) values (?, ?, ?, ?, ?, ?, ?, ?)', 
+			$db->Execute('insert into btNuevebitGalleryImg (bID, fID, url, duration, fadeDuration, groupSet, position, imgHeight) values (?, ?, ?, ?, ?, ?, ?, ?)', 
 				array($nbID, $im['fID'], $im['url'], $im['duration'], $im['fadeDuration'], $im['groupSet'], $im['position'], $im['imgHeight'])
 			);		
 		}
@@ -167,12 +172,12 @@ class NuevebitGalleryController extends BlockController {
 			         " AND fsf.fID = fv.fID AND fvIsApproved = 1");
 			
 			//delete existing images
-			$db->query("DELETE FROM btSlideshowImg WHERE bID=".intval($this->bID));
+			$db->query("DELETE FROM btNuevebitGalleryImg WHERE bID=".intval($this->bID));
 		} else if( $data['type'] == 'CUSTOM' && count($data['imgFIDs']) ){
 			$args['fsID'] = 0;
 
 			//delete existing images
-			$db->query("DELETE FROM btSlideshowImg WHERE bID=".intval($this->bID));
+			$db->query("DELETE FROM btNuevebitGalleryImg WHERE bID=".intval($this->bID));
 			
 			//loop through and add the images
 			$pos=0;
@@ -180,7 +185,7 @@ class NuevebitGalleryController extends BlockController {
 				if(intval($imgFID)==0 || $data['fileNames'][$pos]=='tempFilename') continue;
 				$vals = array(intval($this->bID),intval($imgFID), trim($data['url'][$pos]),intval($data['duration'][$pos]),intval($data['fadeDuration'][$pos]),
 						intval($data['groupSet'][$pos]),intval($data['imgHeight'][$pos]),$pos);
-				$db->query("INSERT INTO btSlideshowImg (bID,fID,url,duration,fadeDuration,groupSet,imgHeight,position) values (?,?,?,?,?,?,?,?)",$vals);
+				$db->query("INSERT INTO btNuevebitGalleryImg (bID,fID,url,duration,fadeDuration,groupSet,imgHeight,position) values (?,?,?,?,?,?,?,?)",$vals);
 				$pos++;
 			}
 		}
