@@ -1,17 +1,10 @@
 <?php   
 defined('C5_EXECUTE') or die("Access Denied."); 
 
-$galleriaThemeUri = "galleria/themes/nuevebit/galleria.simple.js";
-
-$html = Loader::helper("html");
-$galleriaTheme = $html->javascript($galleriaThemeUri, "nuevebit");
-
 $ih = Loader::helper("image");
 ?>
 
 <script type="text/javascript">
-var galleriaLoaded = false;
-
 $(function(){
     // lazy load images in galleria
     var data = [];
@@ -28,20 +21,17 @@ $(function(){
     endforeach;
     ?>
 
-    if (!galleriaLoaded) {
-        Galleria.loadTheme("<?=$galleriaTheme->href?>");
-        galleriaLoaded = true;
-    }
-    
+    <?php if ($lazyLoad != 1): ?>
     Galleria.run("#galleria<?=$bID?>", {
         dataSource: data
     });
+    <?php else: ?>
+        nuevebit.GalleryManager.addGallery($("#galleria<?=$bID?>"), data);
+    <?php endif; ?>
 });
 </script>
-<style>
-</style>
 
-<div class="galleria" id="galleria<?=$bID?>">
+<div class="galleria" id="galleria<?=$bID?>" style="width: 500px; height: 400px;">
     <!--
     Content will be loaded through javascript
     -->

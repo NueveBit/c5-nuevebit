@@ -148,7 +148,7 @@ class Minify_CSS_UriRewriter {
         
         self::$debugText .= "file-relative URI  : {$uri}\n"
                           . "path prepended     : {$path}\n";
-        
+
         // "unresolve" a symlink back to doc root
         foreach ($symlinks as $link => $target) {
             if (0 === strpos($path, $target)) {
@@ -160,6 +160,7 @@ class Minify_CSS_UriRewriter {
                 break;
             }
         }
+
         // strip doc root
         $path = substr($path, strlen($realDocRoot));
 //        $path = str_replace(realpath(DIR_BASE), "", $path);

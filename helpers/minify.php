@@ -37,10 +37,10 @@ class MinifyHelper {
         $posCore = strpos($source->file, $packagesCoreRel);
 
         if ($posRel !== false || $posCore !== false) {
-            list($pkg) = explode('packages/', $source->file, 2);
+            list($prefix, $pkg) = explode('packages/', $source->file, 2);
             $pkg = substr($pkg, 0, strpos($pkg, '/'));
         }
-        
+
         list($name) = explode('?v=', $source->file, 2);
         $name = $this->getFileName($name, $type, $pkg);
 
@@ -118,7 +118,7 @@ class MinifyHelper {
             }
 
             // since we compile less files, we can avoid including the js compiler
-            if (preg_match("/^less(-.*)?(.min)?.js$/", $name) == 1) {
+            if (preg_match("/\/less(-.*)?(.min)?.js$/", $name) == 1) {
                 continue;
             }
             

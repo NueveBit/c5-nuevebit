@@ -7,11 +7,12 @@
 			<unsigned />
 		</field>
 		<field name="fsID" type="I"><unsigned /></field>		
+		<field name="lazyLoad" type="L" ><unsigned /></field>		
 		<field name="playback" type="C" size="50"></field>	
 		<field name="duration" type="I"><unsigned /></field>
 		<field name="fadeDuration" type="I"><unsigned /></field>
 	</table>
-	
+
 	<table name="btNuevebitGalleryImg">
 		<field name="id" type="I">
 			<key />

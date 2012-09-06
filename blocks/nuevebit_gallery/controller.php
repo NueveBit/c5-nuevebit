@@ -31,7 +31,7 @@ class NuevebitGalleryBlockController extends BlockController {
 
     public function on_page_view() {
         $html = Loader::helper("html");
-        $this->addFooterItem($html->javascript("galleria.js", "nuevebit"));
+        $this->addFooterItem($html->javascript("nuevebit.js", "nuevebit"));
     }
 	
 	public function getJavaScriptStrings() {
@@ -131,6 +131,7 @@ class NuevebitGalleryBlockController extends BlockController {
 		$this->set('fsName', $this->getFileSetName());
 		$this->set('images', $this->images);
 		$this->set('playback', $this->playback);
+        $this->set('lazyLoad', $this->lazyLoad);
 		$type = ($this->fsID > 0) ? 'FILESET' : 'CUSTOM';
 		$this->set('type', $type);
 		$this->set('bID', $this->bID);				
@@ -167,6 +168,7 @@ class NuevebitGalleryBlockController extends BlockController {
 			$args['fsID'] = $data['fsID'];
 			$args['duration'] = $data['duration'][0];
 			$args['fadeDuration'] = $data['fadeDuration'][0];
+            $args['theme'] = $data['theme'];
 
 			$files = $db->getAll("SELECT fv.fID FROM FileSetFiles fsf, FileVersions fv WHERE fsf.fsID = " . $data['fsID'] .
 			         " AND fsf.fID = fv.fID AND fvIsApproved = 1");

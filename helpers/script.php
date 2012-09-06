@@ -5,7 +5,7 @@ define('DIRNAME_LESS', 'less');
 class ScriptHelper extends HtmlHelper {
 
     public function less($file, $pkgHandle = null) {
-		$less = new CSSOutputObject();
+		$less = new LessOutputObject();
 
 		// if the first character is a / then that means we just go right through, it's a direct path
 		if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, DISPATCHER_FILENAME) > -1) {
@@ -41,10 +41,10 @@ class ScriptHelper extends HtmlHelper {
     }
 }
 
-class LessOutputObject extends HeaderOutputObject {
+class LessOutputObject extends CSSOutputObject {
 
 	public function __toString() {
-		return '<link rel="stylesheet" type="text/css" href="' . $this->file . '" />';
+		return '<link rel="stylesheet" type="text/less" href="' . $this->file . '" />';
 	}
 	
 }

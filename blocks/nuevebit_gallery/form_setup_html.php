@@ -33,6 +33,15 @@ $ah = Loader::helper('concrete/interface');
 	</select>
 	</td>
 	</tr>
+    <tr>
+        <td>
+            <strong><?php echo t('Theme')?></strong>
+            <select name="theme" style="vertical-align: middle">
+                <option value="thumbnailed"><?php echo t('Thumbnailed Gallery')?></option>
+                <option value="simple"><?php echo t('Simple Gallery')?></option>
+            </select>
+        </td>
+    </tr>
 	<tr style="padding-top: 8px">
 	<td colspan="2">
 	<br />

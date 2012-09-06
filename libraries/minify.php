@@ -20,6 +20,8 @@ class NB_LessSource extends Minify_Source {
             "lastModified" => filemtime($lessFile)
         );
 
+//        echo "file: " . $lessFile;
+
         parent::__construct($spec);
     }
 
