@@ -31,7 +31,7 @@ $(function(){
 });
 </script>
 
-<div class="galleria" id="galleria<?=$bID?>" style="width: 500px; height: 400px;">
+<div class="galleria" id="galleria<?=$bID?>">
     <!--
     Content will be loaded through javascript
     -->

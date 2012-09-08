@@ -168,7 +168,6 @@ class NuevebitGalleryBlockController extends BlockController {
 			$args['fsID'] = $data['fsID'];
 			$args['duration'] = $data['duration'][0];
 			$args['fadeDuration'] = $data['fadeDuration'][0];
-            $args['theme'] = $data['theme'];
 
 			$files = $db->getAll("SELECT fv.fID FROM FileSetFiles fsf, FileVersions fv WHERE fsf.fsID = " . $data['fsID'] .
 			         " AND fsf.fID = fv.fID AND fvIsApproved = 1");

@@ -63,11 +63,11 @@ var CCM_REL = "<?php  echo DIR_REL?>";
 </script>
 
 <?php 
-$html = Loader::helper('html');
+$assets = Loader::helper('assets', "nuevebit");
 
 if ($u->isRegistered()) {
-    $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
-    $this->addFooterItem($html->javascript('ccm.base.js', false, true), 'CORE');
+    $this->addHeaderItem($assets->css('ccm.base.css'), 'CORE');
+    $this->addFooterItem($assets->javascript('ccm.base.js'), 'CORE');
 }
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
@@ -102,18 +102,37 @@ if (is_object($cp)) {
 
 }
 
-if (defined('MINIFY_USE_CDN') && MINIFY_USE_CDN):
+$headerItems = $this->getHeaderItems();
+$headerJsItems = $assets->getHeaderJsItems();
+$mh = Loader::helper("minify", "nuevebit");
+$minifyEnable = defined('MINIFY_ENABLE') && MINIFY_ENABLE;
+$useCdn = defined('MINIFY_USE_CDN') && MINIFY_USE_CDN;
+
+if ($minifyEnable):
+    if ($useCdn):
 ?>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
 
 <?php
+    else:
+        $jqueryAsset = $assets->javascript("jquery.js", null, true);
+    
+        // include jquery before every other script
+        array_unshift($headerJsItems, $jqueryAsset);
+    endif;
 else:
-    echo $html->javascript("jquery.js");
+    echo $assets->javascript("jquery.js");
 endif;
 
-$mh = Loader::helper("minify", "nuevebit");
-$mh->outputItems($this->getHeaderItems(), "css");
+$mh->outputItems($headerItems, "css");
+
+if (count($headerJsItems) > 1) {
+    $mh->outputItems($headerJsItems, "js");
+} else {
+    // only jquery is to be included, we skip the minifier to speed things up
+    echo $headerJsItems[0];
+}
 
 //$this->controller->outputHeaderItems();
 $_trackingCodePosition = Config::get('SITE_TRACKING_CODE_POSITION');

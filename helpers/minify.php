@@ -9,6 +9,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class MinifyHelper {
 
+    private $includedItems = array();
+
     public function __construct() {
     }
 
@@ -20,7 +22,7 @@ class MinifyHelper {
         $this->includeItems($sources, $type);
     }
 
-    private function getFileInfo($source) {
+    public function getFileInfo($source) {
         $type = null; //default
 
         if ($source instanceof CSSOutputObject) {
@@ -82,10 +84,10 @@ class MinifyHelper {
         if (defined('MINIFY_ENABLE') && MINIFY_ENABLE) {
             list($cssUrl, $jsUrl) = $this->minifyUrl($sources, $type);
 
-            if ($jsUrl != null && $type == "js") {
-                print "<script src='$jsUrl' type='text/javascript'></script> ";
-            } else if ($cssUrl != null && $type == "css") {
+            if ($cssUrl != null && $type == "css") {
                 print "<link rel='stylesheet' type='text/css' href='$cssUrl' />";
+            } else if ($jsUrl != null && $type == "js") {
+                print "<script src='$jsUrl' type='text/javascript'></script> ";
             }
         } else {
             foreach ($sources as $source) {
@@ -100,7 +102,7 @@ class MinifyHelper {
         $targetFiles["js"] = "";
 
         foreach ($sources as $source) {
-            list($name, $type, $pkg) = $this->getFileInfo($source);
+            list($name, $type, $pkg) = self::getFileInfo($source);
 
             // if no type can be assumed we fail
             // also, we do not minify tiny_mce or we get errors!
@@ -113,14 +115,24 @@ class MinifyHelper {
                 continue;
             }
 
-            if ($name == "jquery.js") {
+            // avoid including items more than once
+            if (array_search($name, $this->includedItems)) {
                 continue;
+            }
+
+            if (defined('MINIFY_USE_CDN') && MINIFY_USE_CDN) {
+                // exclude CDN items
+                if ($name == "jquery.js") {
+                    continue;
+                }
             }
 
             // since we compile less files, we can avoid including the js compiler
             if (preg_match("/\/less(-.*)?(.min)?.js$/", $name) == 1) {
                 continue;
             }
+
+            $this->includedItems[] = $name;
             
             if ($pkg) {
                 $name .= ";$pkg";

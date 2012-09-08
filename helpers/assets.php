@@ -2,7 +2,23 @@
 
 define('DIRNAME_LESS', 'less');
 
-class ScriptHelper extends HtmlHelper {
+class AssetsHelper extends HtmlHelper {
+
+    private $headerJsItems = array();
+
+    public function javascript($file, $pkgHandle = null, $includeInHeader = false) {
+        $outputObject = parent::javascript($file, $pkgHandle);
+        
+        if ($includeInHeader) {
+            $this->headerJsItems[] = $outputObject;
+        }
+
+        return $outputObject;
+    }
+
+    public function getHeaderJsItems() {
+        return $this->headerJsItems;
+    }
 
     public function less($file, $pkgHandle = null) {
 		$less = new LessOutputObject();
