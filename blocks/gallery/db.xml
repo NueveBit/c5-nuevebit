@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+	<table name="nuevebit_btGallery">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="lazyLoad" type="L" ><unsigned /></field>		
+		<field name="dataLayer" type="L" ><unsigned /></field>		
+		<field name="playback" type="C" size="50"></field>	
+		<field name="duration" type="I"><unsigned /></field>
+	</table>
+
+	<table name="nuevebit_btGallerySets">
+		<field name="id" type="I">
+			<key />
+			<autoincrement />
+			<unsigned />
+		</field>
+		<field name="bID" type="I"><unsigned /></field>
+		<field name="fsID" type="I"><unsigned /></field>		
+		<field name="showThumbnail" type="L" ><unsigned /></field>
+		<field name="sdate" type="D" ></field>
+	</table>
+	
+</schema>

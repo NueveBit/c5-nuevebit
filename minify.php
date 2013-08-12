@@ -42,6 +42,8 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
     $packages = array();
 
     foreach ($files as $file) {
+        $file = str_replace("../", "", $file);
+        
         list($name, $pkg) = explode(";", $file);
         $packages[] = $pkg;
 
@@ -173,7 +175,7 @@ function resolveCss($file, $type, $pkgHandle) {
         return null;
     }
 
-    $currentTheme = $_GET["v"];
+    $currentTheme = str_replace("../", "", $_GET["v"]);
     if (isset($currentTheme) && $currentTheme != "") {
         $currentThemeDirectory = DIR_FILES_THEMES . '/' . $currentTheme;
 

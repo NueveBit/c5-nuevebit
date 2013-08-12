@@ -31,6 +31,7 @@ class NuevebitGalleryBlockController extends BlockController {
 
     public function on_page_view() {
         $html = Loader::helper("html");
+        $this->addHeaderItem($html->javascript("galleria.js", "nuevebit"));
         $this->addFooterItem($html->javascript("nuevebit.js", "nuevebit"));
     }
 	
@@ -132,6 +133,7 @@ class NuevebitGalleryBlockController extends BlockController {
 		$this->set('images', $this->images);
 		$this->set('playback', $this->playback);
         $this->set('lazyLoad', $this->lazyLoad);
+        $this->set('dataLayer', $this->dataLayer);
 		$type = ($this->fsID > 0) ? 'FILESET' : 'CUSTOM';
 		$this->set('type', $type);
 		$this->set('bID', $this->bID);				
@@ -148,14 +150,18 @@ class NuevebitGalleryBlockController extends BlockController {
 	function edit() {
 		$this->loadBlockInformation();
 	}
+
+    function composer() {
+		$this->loadBlockInformation();
+    }
 	
 	function duplicate($nbID) {
 		parent::duplicate($nbID);
 		$this->loadBlockInformation();
 		$db = Loader::db();
 		foreach($this->images as $im) {
-			$db->Execute('insert into btNuevebitGalleryImg (bID, fID, url, duration, fadeDuration, groupSet, position, imgHeight) values (?, ?, ?, ?, ?, ?, ?, ?)', 
-				array($nbID, $im['fID'], $im['url'], $im['duration'], $im['fadeDuration'], $im['groupSet'], $im['position'], $im['imgHeight'])
+			$db->Execute('insert into btNuevebitGalleryImg (bID, fID, url, duration, fadeDuration, groupSet, position, imgHeight, title, description) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+				array($nbID, $im['fID'], $im['url'], $im['duration'], $im['fadeDuration'], $im['groupSet'], $im['position'], $im['imgHeight'], $im["title"], $im["description"])
 			);		
 		}
 	}
@@ -163,7 +169,7 @@ class NuevebitGalleryBlockController extends BlockController {
 	function save($data) { 
 		$args['playback'] = isset($data['playback']) ? trim($data['playback']) : 'ORDER';
 		$db = Loader::db();
-		
+
 		if( $data['type'] == 'FILESET' && $data['fsID'] > 0){
 			$args['fsID'] = $data['fsID'];
 			$args['duration'] = $data['duration'][0];
@@ -184,9 +190,13 @@ class NuevebitGalleryBlockController extends BlockController {
 			$pos=0;
 			foreach($data['imgFIDs'] as $imgFID){ 
 				if(intval($imgFID)==0 || $data['fileNames'][$pos]=='tempFilename') continue;
-				$vals = array(intval($this->bID),intval($imgFID), trim($data['url'][$pos]),intval($data['duration'][$pos]),intval($data['fadeDuration'][$pos]),
+
+                $title = filter_var($data["title"][$pos], FILTER_SANITIZE_STRING);
+                $description = filter_var($data["description"][$pos], FILTER_SANITIZE_STRING);
+                
+				$vals = array(intval($this->bID),intval($imgFID), $title, $description, trim($data['url'][$pos]),intval($data['duration'][$pos]),intval($data['fadeDuration'][$pos]),
 						intval($data['groupSet'][$pos]),intval($data['imgHeight'][$pos]),$pos);
-				$db->query("INSERT INTO btNuevebitGalleryImg (bID,fID,url,duration,fadeDuration,groupSet,imgHeight,position) values (?,?,?,?,?,?,?,?)",$vals);
+				$db->query("INSERT INTO btNuevebitGalleryImg (bID,fID,title,description,url,duration,fadeDuration,groupSet,imgHeight,position) values (?,?,?,?,?,?,?,?,?,?)",$vals);
 				$pos++;
 			}
 		}

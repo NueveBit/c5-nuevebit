@@ -101,11 +101,13 @@ var SlideshowBlock = {
 			}	
 		} else {
 			qIDs=this.serialize();
-			if( qIDs.length<2 ){
+            /*
+			if( qIDs.length<1 ){
 				alert(ccm_t('choose-min-2'));
 				$('#ccm-slideshowBlock-AddImg').focus();
 				failed=1;
 			}	
+            */
 		}
 		
 		if(failed){
@@ -120,15 +122,15 @@ ccmValidateBlockForm = function() { return SlideshowBlock.validate(); }
 ccm_chooseAsset = function(obj) { SlideshowBlock.selectObj(obj); }
 
 $(function() {
-	if ($("#newImg select[name=type]").val() == 'FILESET') {
-		$("#newImg select[name=type]").val('FILESET');
+	if ($("#newImg .select").val() == 'FILESET') {
+		$("#newImg .select").val('FILESET');
 		SlideshowBlock.showFileSet();
 	} else {
-		$("#newImg select[name=type]").val('CUSTOM');
+		$("#newImg .select").val('CUSTOM');
 		SlideshowBlock.showImages();
 	}
 
-	$("#newImg select[name=type]").change(function(){
+	$("#newImg .select").change(function(){
 		if (this.value == 'FILESET') {
 			SlideshowBlock.showFileSet();
 		} else {

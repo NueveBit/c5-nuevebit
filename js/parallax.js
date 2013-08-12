@@ -8,6 +8,8 @@ if ("undefined" == typeof nuevebit.Parallax) {
         this._init();
     }
 
+    nuevebit.Parallax.SUPPORTS_TRANSITIONS = false;
+
     nuevebit.Parallax.Viewport = function(id, height, initialPosition, topOffset, speedFactor) {
         this._init(id, height, initialPosition, topOffset, speedFactor);
     }
@@ -143,7 +145,12 @@ if ("undefined" == typeof nuevebit.Parallax) {
                 var xpos = viewports[viewport].xpos;
 
                 var coords = xpos + ' ' + y + 'px';
-                jqElement.css('backgroundPosition', coords);
+
+                if (nuevebit.Parallax.SUPPORTS_TRANSITIONS) {
+                    jqElement.transition({backgroundPosition: coords}, 0);
+                } else {
+                    jqElement.css('backgroundPosition', coords);
+                }
             }
         }, 
 
@@ -151,7 +158,11 @@ if ("undefined" == typeof nuevebit.Parallax) {
             if (viewport in viewports && element in viewports[viewport].elements) {
                 var jqElement = viewports[viewport].elements[element];
 
-                jqElement.css('top', y);
+                if (nuevebit.Parallax.SUPPORTS_TRANSITIONS) {
+                    jqElement.transition({top: y}, 0);
+                } else {
+                    jqElement.css('top', y);
+                }
             }
         }
     };
@@ -199,12 +210,17 @@ if ("undefined" == typeof nuevebit.Parallax) {
         var jqueryViewport = {
             add: function(element, speedFactor) {
                 var initialTop = element.css('top');
-                initialTop = initialTop.replace(/[^0-9-]/g, '')
-                var viewportElement = viewport.add(parseInt(initialTop), speedFactor);  
-                
-                viewports[viewport].elements[viewportElement] = element;
-                parallax.animate($window.height(), $window.scrollTop());
-                return this;
+
+                if (initialTop) {
+                    initialTop = initialTop.replace(/[^0-9-]/g, '')
+                    var viewportElement = viewport.add(parseInt(initialTop), speedFactor);  
+                    
+                    viewports[viewport].elements[viewportElement] = element;
+                    parallax.animate($window.height(), $window.scrollTop());
+                    return this;
+                } else {
+                    return {};
+                }
             }
         };
 

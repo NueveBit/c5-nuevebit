@@ -5,17 +5,6 @@ $class = "active";
 
 ?>
 
-<script type="text/javascript">
-$(function(){
-	$("#carousel<?=$bID?>").carousel({
-        interval: <?=$duration * 1000?>
-    });
-
-});
-</script>
-<style>
-</style>
-
 <div class="carousel slide" id="carousel<?=$bID?>">
 	
     <div class="carousel-inner">
@@ -26,7 +15,7 @@ $(function(){
             
 			<div class="item <?=$class?>">	
               
-                <img src="<?=$f->getRelativePath()?>" style="width: 100%;"/>
+                <img src="<?=$f->getRelativePath()?>"/>
               
 			</div>	
         
