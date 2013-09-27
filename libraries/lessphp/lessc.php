@@ -127,6 +127,13 @@ class lessc {
 			}
 		}
 
+		// set the parents of all the block props
+		foreach ($root->props as $prop) {
+			if ($prop[0] == "block") {
+				$prop[1]->parent = $parentBlock;
+			}
+		}
+
 		// copy mixins into scope, set their parents
 		// bring blocks from import into current block
 		// TODO: need to mark the source parser	these came from this file
