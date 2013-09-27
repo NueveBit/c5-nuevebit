@@ -28,6 +28,7 @@ class NB_LessSource extends Minify_Source {
     public function parse() {
         if (self::$compiler == null) {
             self::$compiler = new lessc();
+            self::$compiler->setFormatter("lessjs");
         }
 
         $content = self::$compiler->compileFile($this->lessFile);

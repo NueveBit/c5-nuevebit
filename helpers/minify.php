@@ -43,16 +43,16 @@ class MinifyHelper {
             $pkg = substr($pkg, 0, strpos($pkg, '/'));
         }
 
-        list($name) = explode('?v=', $source->file, 2);
+        list($name, $version) = explode('?v=', $source->file, 2);
         $name = $this->getFileName($name, $type, $pkg);
-
+        
         return array($name, $type, $pkg);
     }
 
     private function getFileName($source, $type, $pkgHandle) {
 		$v = View::getInstance();
         $replace = "";
-
+        
         if ($type == "css") {
             $dirname = DIRNAME_CSS;
             $assetsUrl = ASSETS_URL_CSS;
@@ -60,13 +60,13 @@ class MinifyHelper {
             $dirname = DIRNAME_JAVASCRIPT;
             $assetsUrl = ASSETS_URL_JAVASCRIPT;
         }
-        
+
         if ($v->getThemeDirectory() != '' && strpos($source, $v->getThemePath()) !== false) {
             $replace = $v->getThemePath() . '/';
-        } else if (strpos($source, DIR_REL . '/' . $dirname) !== false) {
+        } else if (strpos($source, DIR_REL . '/' . $dirname) === 0) {
             $replace = DIR_REL . '/' . $dirname . '/';
         } else if ($pkgHandle) {
-            if (strpos($source, DIR_BASE . '/' . DIRNAME_PACKAGE . '/') !== false) {
+            if (strpos($source, DIR_REL . '/' . DIRNAME_PACKAGE . '/') !== false) {
                 $replace = DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . $dirname . '/';
             } else if (strpos($source, ASSETS_URL . '/' . DIRNAME_PACKAGES) !== false) {
                 $replace = ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . $dirname . '/';
@@ -82,21 +82,31 @@ class MinifyHelper {
 
     private function includeItems($sources, $type) {
         if (defined('MINIFY_ENABLE') && MINIFY_ENABLE) {
-            list($cssUrl, $jsUrl) = $this->minifyUrl($sources, $type);
+            $inlineItems = array();
+            list($cssUrl, $jsUrl) = $this->minifyUrl($sources, $type, $inlineItems);
 
             if ($cssUrl != null && $type == "css") {
                 print "<link rel='stylesheet' type='text/css' href='$cssUrl' />";
             } else if ($jsUrl != null && $type == "js") {
                 print "<script src='$jsUrl' type='text/javascript'></script> ";
             }
+
+            foreach ($inlineItems as $item) {
+                print $item;
+            }
         } else {
             foreach ($sources as $source) {
-                print $source;
+                list($name, $type, $pkg) = self::getFileInfo($source);
+                
+                // avoid including jquery twice
+                if ($name != "jquery.js") {
+                    print $source;
+                }
             }
         }
     }
 
-    private function minifyUrl($sources, $urlType) {
+    private function minifyUrl($sources, $urlType, &$inlineItems) {
         $targetFiles = array();
         $targetFiles["css"] = "";
         $targetFiles["js"] = "";
@@ -107,7 +117,7 @@ class MinifyHelper {
             // if no type can be assumed we fail
             // also, we do not minify tiny_mce or we get errors!
             if (!$type || $name == "tiny_mce/tiny_mce.js") {
-                print $source;
+                $inlineItems[] = $source;
                 continue;
             }
 

@@ -2,6 +2,19 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $al = Loader::helper('concrete/asset_library');
 $ah = Loader::helper('concrete/interface');
+
+if (!isset($fsIdField)) {
+    $fsIdField = "fsID";
+}
+
+if (!isset($typeField)) {
+    $typeField = "type";
+}
+
+if (!isset($imgFIDs)) {
+    $imgFIDs = "imgFIDs";
+}
+
 ?>
 <style type="text/css">
 #ccm-slideshowBlock-imgRows a{cursor:pointer}
@@ -19,17 +32,9 @@ $ah = Loader::helper('concrete/interface');
 	<tr>
 	<td>
 	<strong><?php echo t('Type')?></strong>
-	<select name="type" style="vertical-align: middle">
+	<select class="select" name="<?=$typeField?>" style="vertical-align: middle">
 		<option value="CUSTOM"<?php  if ($type == 'CUSTOM') { ?> selected<?php  } ?>><?php echo t('Custom Slideshow')?></option>
 		<option value="FILESET"<?php  if ($type == 'FILESET') { ?> selected<?php  } ?>><?php echo t('Pictures from File Set')?></option>
-	</select>
-	</td>
-	<td>
-	<strong><?php echo t('Playback')?></strong>
-	<select name="playback" style="vertical-align: middle">
-		<option value="ORDER"<?php  if ($playback == 'ORDER') { ?> selected<?php  } ?>><?php echo t('Display Order')?></option>
-		<option value="RANDOM-SET"<?php  if ($playback == 'RANDOM-SET') { ?> selected<?php  } ?>><?php echo t('Random (But keep sets together)')?></option>
-		<option value="RANDOM"<?php  if ($playback == 'RANDOM') { ?> selected<?php  } ?>><?php echo t('Completely Random')?></option>
 	</select>
 	</td>
 	</tr>
@@ -44,14 +49,14 @@ $ah = Loader::helper('concrete/interface');
 <br/>
 
 <div id="ccm-slideshowBlock-imgRows">
-<?php  if ($fsID <= 0) {
+<?php  if ($fsID <= 0 && count($images) > 0) {
 	foreach($images as $imgInfo){ 
 		$f = File::getByID($imgInfo['fID']);
 		$fp = new Permissions($f);
 		$imgInfo['thumbPath'] = $f->getThumbnailSRC(1);
 		$imgInfo['fileName'] = $f->getTitle();
 		if ($fp->canRead()) { 
-			$this->inc('image_row_include.php', array('imgInfo' => $imgInfo));
+			$this->inc('image_row_include.php', array('imgInfo' => $imgInfo, "imgFIDs" => $imgFIDs));
 		}
 	}
 } ?>
@@ -75,7 +80,7 @@ if ($fsID > 0) {
 	$fsInfo['duration']=$defaultDuration;
 	$fsInfo['fadeDuration']=$defaultFadeDuration;
 }
-$this->inc('fileset_row_include.php', array('fsInfo' => $fsInfo)); ?> 
+$this->inc('fileset_row_include.php', array('fsInfo' => $fsInfo, "fsIdField" => $fsIdField)); ?> 
 
 <div id="imgRowTemplateWrap" style="display:none">
 <?php 
@@ -91,5 +96,5 @@ $imgInfo['imgHeight']=tempHeight;
 $imgInfo['url']='';
 $imgInfo['class']='ccm-slideshowBlock-imgRow';
 ?>
-<?php  $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?> 
+<?php  $this->inc('image_row_include.php', array('imgInfo' => $imgInfo, "imgFIDs" => $imgFIDs)); ?> 
 </div>

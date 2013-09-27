@@ -120,18 +120,22 @@ if ($minifyEnable):
     
         // include jquery before every other script
         array_unshift($headerJsItems, $jqueryAsset);
+
     endif;
+
 else:
     echo $assets->javascript("jquery.js");
 endif;
 
 $mh->outputItems($headerItems, "css");
 
-if (count($headerJsItems) > 1) {
-    $mh->outputItems($headerJsItems, "js");
-} else {
-    // only jquery is to be included, we skip the minifier to speed things up
-    echo $headerJsItems[0];
+if ($minifyEnable) {
+    if (count($headerJsItems) > 1) {
+        $mh->outputItems($headerJsItems, "js");
+    } else {
+        // only jquery's to be included, we skip the minifier to speed things up
+        echo $headerJsItems[0];
+    }
 }
 
 //$this->controller->outputHeaderItems();

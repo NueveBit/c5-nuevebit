@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <attributekeys>
+        <attributekey handle="gallery_month" name="Gallery Month" package="" searchable="1" indexed="1" type="select" category="collection">
+            <type allow-multiple-values="0" display-order="display_asc" allow-other-values="0">
+                <options>
+                    <option value="enero" is-end-user-added="1"/>
+                    <option value="febrero" is-end-user-added="1"/>
+                    <option value="marzo" is-end-user-added="1"/>
+                    <option value="abril" is-end-user-added="1"/>
+                    <option value="mayo" is-end-user-added="1"/>
+                    <option value="junio" is-end-user-added="1"/>
+                    <option value="julio" is-end-user-added="1"/>
+                    <option value="agosto" is-end-user-added="1"/>
+                    <option value="septiembre" is-end-user-added="1"/>
+                    <option value="octubre" is-end-user-added="1"/>
+                    <option value="noviembre" is-end-user-added="1"/>
+                    <option value="diciembre" is-end-user-added="1"/>
+                </options>
+            </type>
+        </attributekey>
+
+    </attributekeys>
+    <pagetypes>
+        <pagetype handle="gallery_entry" name="Gallery Entry" internal="0" icon="" package="nuevebit">
+            <composer method="PARENT" pagetype="" parent="{ccm:export:page:/galleries}">
+                <items>
+                    <block type="image" name="Thumbnail Image" composer-template="gallery_thumbnail.php"/>
+                    <block type="nuevebit_gallery" package="nuevebit" name="Nuevebit Gallery" />
+                    <attributekey handle="tags"/>
+                    <attributekey handle="gallery_month"/>
+                </items>
+            </composer>
+            <page name="" path="" filename="" pagetype="gallery_entry" description="" package="nuevebit">
+                <attributes>
+                    <attributekey handle="tags"/>
+                    <attributekey handle="gallery_thumbnail"/>
+                    <attributekey handle="gallery_month"/>
+                </attributes>
+                <area name="Thumbnail Image">
+                    <block type="image" name="Thumbnail Image" composer-template="gallery_thumbnail.php"/>
+                </area>
+                <area name="Main">
+                    <block type="nuevebit_gallery" name="Nuevebit Gallery"  package="nuevebit" >
+                    </block>
+                </area>
+            </page>
+        </pagetype>
+    </pagetypes>
+    <pages>
+        <page name="Galleries" path="/galleries" filename="" pagetype="full" description="" package="">
+            <area name="Main" />
+        </page>
+    </pages>
+</concrete5-cif>

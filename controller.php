@@ -6,19 +6,30 @@ class NuevebitPackage extends Package {
 
 	protected $pkgHandle = 'nuevebit';
 	protected $appVersionRequired = '5.5.0';
-	protected $pkgVersion = '0.3.7'; 
+	protected $pkgVersion = '0.6'; 
 	
 	public function getPackageName() {
 		return t("9Bit"); 
 	}	
 	
 	public function getPackageDescription() {
-		return t("9Bit Package - Contains blocks, pagetypes, themes");
+		return t("9Bit Package - Contains blocks, pagetypes, themes, etc.");
 	}
 
     public function upgrade() {
         parent::upgrade();
 
+//        $args = array("akHandle" => "gallery_thumbnail", "akName" => "Gallery Thumbnail", "akIsSearchable" => "1");
+//        $type = AttributeType::getByHandle("image_file");
+//        CollectionAttributeKey::add($type, $args, $this);
+        // install 'one page' block
+        
+//        Loader::library('content/importer');
+//        $ci = new ContentImporter();
+//        $ci->importContentFile($this->getPackagePath() . '/content.xml');
+
+        
+//		BlockType::installBlockTypeFromPackage('nuevebit_search', $this);
 
 //		$db = Loader::db();
 #		$db->Execute('TRUNCATE TABLE items_Items');
@@ -43,27 +54,32 @@ class NuevebitPackage extends Package {
         // install 'nuevebit page list' block
 //		BlockType::installBlockTypeFromPackage('nuevebit_page_list', $this);
 //        BlockType::getByHandle('nuevebit_gallery')->controller->uninstall();
-//		BlockType::installBlockTypeFromPackage('nuevebit_gallery', $this);
+//        $quotesBlock = BlockType::getByHandle("quote", $this);
+//        if ($quotesBlock) {
+//            $quotesBlock->controller->uninstall();
+//        }
+        
+//		BlockType::installBlockTypeFromPackage('quotes', $this);
     }
 	
 	public function install() {
 		$pkg = parent::install();
 
-//	    $sp = SinglePage::add('/dashboard/products', $pkg);
-//		$sp->update(array('cName'=>t("Products"), 'cDescription'=>t("Manage products.")));
-
-//	    $sp = SinglePage::add('/dashboard/items/import', $pkg);
-//		$sp->update(array('cName'=>t("Import"), 'cDescription'=>t("Import a list of items into the db.")));
-		
-//	    $sp = SinglePage::add('/dashboard/items/add', $pkg);
-//		$sp->update(array('cName'=>t("Add"), 'cDescription'=>t("Add a new item.")));
-
-//	    $sp = SinglePage::add('/dashboard/products/list', $pkg);
-//		$sp->update(array('cName'=>t("List"), 'cDescription'=>t("List all available products.")));
-
+        $args = array("akHandle" => "gallery_thumbnail", "akName" => "Gallery Thumbnail", "akIsSearchable" => "1");
+        $type = AttributeType::getByHandle("image_file");
+        CollectionAttributeKey::add($type, $args, $this);
+        
         // install 'one page' block
 		BlockType::installBlockTypeFromPackage('nuevebit_page_list', $pkg);
 		BlockType::installBlockTypeFromPackage('nuevebit_gallery', $pkg);
+//		BlockType::installBlockTypeFromPackage('gallery', $pkg);
+		BlockType::installBlockTypeFromPackage('searchable_page_list', $pkg);
+		BlockType::installBlockTypeFromPackage('quote', $pkg);
+		BlockType::installBlockTypeFromPackage('nuevebit_search', $pkg);
+
+        Loader::library('content/importer');
+        $ci = new ContentImporter();
+//        $ci->importContentFile($this->getPackagePath() . '/content.xml');
 
 		// install 'one page' page type
 //        $data = array("ctHandle" => "one_page", "ctName" => "One Page");
