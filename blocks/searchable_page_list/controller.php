@@ -16,6 +16,7 @@ class SearchablePageListBlockController extends BlockController {
     protected $btExportTables = array('nuevebit_btPageList', 'nuevebit_btPageListAttribute', 'nuevebit_btPageListFilter');
 
     public $excludes = array(); // list of page ids to exclude
+    public $filters = array();
     
     /**
      * Used for localization. If we want to localize the name/description we have to include this
@@ -163,10 +164,14 @@ class SearchablePageListBlockController extends BlockController {
     }
 
     private function getFilters() {
-        $db = Loader::db();
-        $sql = "select f.* from nuevebit_btPageListFilter f where f.bID = ?";
+        if ($this->bID) {
+            $db = Loader::db();
+            $sql = "select f.* from nuevebit_btPageListFilter f where f.bID = ?";
 
-        return $db->GetAll($sql, array($this->bID));
+            return $db->GetAll($sql, array($this->bID));
+        } else {
+            return $this->filters;
+        }
     }
 
     private function applyUserAttributes($pageList) {
@@ -193,6 +198,7 @@ class SearchablePageListBlockController extends BlockController {
 
     private function applyFilters($pageList) {
         foreach ($this->getFilters() as $filter) {
+            Log::addEntry($filter);
             if ($filter["type"] == "attribute") {
                 $pageList->filterByAttribute(
                         $filter["col"], $filter["value"], $filter["comp"]);
