@@ -198,10 +198,11 @@ class SearchablePageListBlockController extends BlockController {
 
     private function applyFilters($pageList) {
         foreach ($this->getFilters() as $filter) {
-            Log::addEntry($filter);
             if ($filter["type"] == "attribute") {
                 $pageList->filterByAttribute(
                         $filter["col"], $filter["value"], $filter["comp"]);
+            } else if ($filter["type"] == "date") {
+                $pageList->filterByPublicDate($filter["value"], $filter["comp"]);
             }
         }
     }

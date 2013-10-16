@@ -1,56 +1,55 @@
-<?php   
-defined('C5_EXECUTE') or die("Access Denied."); 
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $ih = Loader::helper("image");
 ?>
 
 <script type="text/javascript">
-$(function(){
-    // lazy load images in galleria
-    var data = [];
-    var source = null;
-    <?php 
-    foreach ($images as $image):
-        $file = File::getByID($image['fID']);
-    
-        if ($dataLayer == 1) {
-            $fileVersion = $file->getApprovedVersion();
-            
-            $title = $fileVersion->getTitle();
-            $description = $fileVersion->getDescription();
-//            Log::addEntry($description);
-            
-            //$layer = "<div class='galleria-inner-layer'><h1>$title</h1><p>$description</p></div>";
-        }
-    ?>
+    $(function(){
+        // lazy load images in galleria
+        var data = [];
+        var source = null;
+<?php
+foreach ($images as $image):
+    $file = File::getByID($image['fID']);
 
-    source = {
-        image: "<?=$file->getRelativePath()?>",
-        thumb: "<?=$ih->getThumbnail($file, 180, 120)->src?>"
+    $fileVersion = $file->getApprovedVersion();
+
+    $title = $image["title"];
+    $description = $image["description"];
+    if ($description) {
+        $description = str_replace("\n", "<br/>", $description);
+        $description = str_replace("\"", "'", $description);
     }
-    <?php if ($dataLayer == 1): ?>
-    source.layer = "<?=$layer?>"
-    <?php endif;?>
-            
-    data.push(source);
-    
-    <?php
-    endforeach;
+
+    $thumb = $ih->getThumbnail($file, 180, 120)->src;
+
+    if ($title) {
+        $layer = "<div class='galleria-inner-layer'><header><h1>$title</h1></header><p>$description</p></div>";
+    }
     ?>
 
-    <?php if ($lazyLoad != 1): ?>
-        $(window).load(function() {
-            Galleria.run("#galleria<?=$bID?>", {
-                dataSource: data
-            });
-        })
-    <?php else: ?>
-        nuevebit.GalleryManager.addGallery($("#galleria<?=$bID?>"), data);
+                source = {
+                    image: "<?= $file->getRelativePath() ?>",
+                    thumb: "<?= $thumb ?>"
+                }
+    <?php if ($title): ?>
+                    source.title = "<?=$title?>",
     <?php endif; ?>
-});
+    <?php if ($description): ?>
+                    source.description = "<?=$description?>"
+    <?php endif; ?>
+                                
+                data.push(source);
+                        
+    <?php
+endforeach;
+?>
+        nuevebit.GalleryManager.addGallery($("#galleria<?= $bID ?>"), data);
+    });
 </script>
 
-<div class="galleria" id="galleria<?=$bID?>" >
+<div class="galleria" id="galleria<?= $bID ?>" >
     <!--
     Content will be loaded through javascript
     TODO: Usar <noscript/> para usuarios que no tengan javascript habilitado

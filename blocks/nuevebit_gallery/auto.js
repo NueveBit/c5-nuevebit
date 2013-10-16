@@ -117,6 +117,7 @@ ccmValidateBlockForm = function() {
     return SlideshowBlock.validate();
 }
 
+ccm_chooseAsset = function(obj) { SlideshowBlock.selectObj(obj); }
 
 $(function() {
     if ($("#newImg .select").val() == 'FILESET') {
