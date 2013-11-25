@@ -13,7 +13,7 @@ $class = "active";
             $f = File::getByID($imgInfo['fID']);
 			?>
             
-			<div class="item <?=$class?>" style="background-image: url('<?=$f->getRelativePath(); ?>')">	
+			<div class="item <?=$class?> preload" data-image="<?=$f->getRelativePath();?>" style="background-image: url('<?=$f->getRelativePath(); ?>')">	
                 <h2 class="phrase">
                     <?=$imgInfo["title"];?>
                 </h2>
