@@ -10,6 +10,7 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
     define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
     define('DIRNAME_JAVASCRIPT', 'js');
     define('DIRNAME_PACKAGES', 'packages');
+    define('DIRNAME_BLOCKS', 'blocks');
     define('DIR_BASE_CORE', dirname(__FILE__) . '/concrete');
     define('DIRNAME_CSS', 'css');
     define('DIR_FILES_THEMES', DIR_BASE . '/themes');
@@ -42,7 +43,10 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
     $packages = array();
 
     foreach ($files as $file) {
-        $file = str_replace("../", "", $file);
+        // security measures...
+        while (strpos($file, "../") !== false) {
+            $file = str_replace("../", "", $file);
+        }
         
         list($name, $pkg) = explode(";", $file);
         $packages[] = $pkg;
@@ -59,16 +63,18 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
     );
 
 
+    
     list($prefix) = explode('/' . MINIFY_SCRIPT, DIR_REL, 2);
     if ($prefix) {
         $prefix = ltrim($prefix, "/");
 
         $symlinks = array();
         $symlinks["//" . $prefix] = DIR_BASE;
+        $symlinks["//" . $prefix . "/concrete"] = DIR_BASE_CORE;
 
-        // this makes OS symlinks work
         $packages = array_unique($packages);
 
+        // this makes OS symlinks work
         foreach ($packages as $package) {
             if ($package) {
                 $path = DIR_BASE . "/packages/" . $package;
@@ -124,6 +130,16 @@ function resolveJs($file, $pkgHandle) {
             }
 
             return $path;
+        } else if (strpos($file, "blocks/") !== false) {
+            $path = substr($file, strpos($file, "blocks/") + 7);
+
+            if (file_exists(DIR_BASE . '/' . DIRNAME_BLOCKS . '/' . $path)) {
+                $path = DIR_BASE . '/' . DIRNAME_BLOCKS . '/' . $path;
+            } else {
+                $path = DIR_BASE_CORE . '/' . DIRNAME_BLOCKS . '/' . $path;
+            }
+
+            return $path;
         }
     }
 
@@ -159,6 +175,16 @@ function resolveCss($file, $type, $pkgHandle) {
                 $path = DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $path;
             } else {
                 $path = DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $path;
+            }
+
+            return $path;
+        } else if (strpos($file, "blocks/") !== false) {
+            $path = substr($file, strpos($file, "blocks/") + 7);
+
+            if (file_exists(DIR_BASE . '/' . DIRNAME_BLOCKS . '/' . $path)) {
+                $path = DIR_BASE . '/' . DIRNAME_BLOCKS . '/' . $path;
+            } else {
+                $path = DIR_BASE_CORE . '/' . DIRNAME_BLOCKS . '/' . $path;
             }
 
             return $path;

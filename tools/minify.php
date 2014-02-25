@@ -16,6 +16,11 @@ if ((isset($_GET["f"]) && $_GET["f"]) &&
     $resolvePath = ($type == "css") ? "resolveCss" : "resolveJs";
     
     foreach ($files as $file) {
+        // security measures...
+        while (strpos($file, "../") !== false) {
+            $file = str_replace("../", "", $file);
+        }
+        
         list($name, $pkg) = explode(";", $file);
 
         $source = $resolvePath($name, $pkg);

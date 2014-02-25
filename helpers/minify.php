@@ -10,8 +10,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class MinifyHelper {
 
     private $includedItems = array();
+    public $inlineItems = array();
 
     public function __construct() {
+        
     }
 
     /**
@@ -45,14 +47,14 @@ class MinifyHelper {
 
         list($name, $version) = explode('?v=', $source->file, 2);
         $name = $this->getFileName($name, $type, $pkg);
-        
+
         return array($name, $type, $pkg);
     }
 
     private function getFileName($source, $type, $pkgHandle) {
-		$v = View::getInstance();
+        $v = View::getInstance();
         $replace = "";
-        
+
         if ($type == "css") {
             $dirname = DIRNAME_CSS;
             $assetsUrl = ASSETS_URL_CSS;
@@ -82,22 +84,17 @@ class MinifyHelper {
 
     private function includeItems($sources, $type) {
         if (defined('MINIFY_ENABLE') && MINIFY_ENABLE) {
-            $inlineItems = array();
-            list($cssUrl, $jsUrl) = $this->minifyUrl($sources, $type, $inlineItems);
+            list($cssUrl, $jsUrl) = $this->minifyUrl($sources, $type);
 
             if ($cssUrl != null && $type == "css") {
                 print "<link rel='stylesheet' type='text/css' href='$cssUrl' />";
             } else if ($jsUrl != null && $type == "js") {
                 print "<script src='$jsUrl' type='text/javascript'></script> ";
             }
-
-            foreach ($inlineItems as $item) {
-                print $item;
-            }
         } else {
             foreach ($sources as $source) {
                 list($name, $type, $pkg) = self::getFileInfo($source);
-                
+
                 // avoid including jquery twice
                 if ($name != "jquery.js") {
                     print $source;
@@ -106,7 +103,7 @@ class MinifyHelper {
         }
     }
 
-    private function minifyUrl($sources, $urlType, &$inlineItems) {
+    private function minifyUrl($sources, $urlType) {
         $targetFiles = array();
         $targetFiles["css"] = "";
         $targetFiles["js"] = "";
@@ -117,7 +114,7 @@ class MinifyHelper {
             // if no type can be assumed we fail
             // also, we do not minify tiny_mce or we get errors!
             if (!$type || $name == "tiny_mce/tiny_mce.js") {
-                $inlineItems[] = $source;
+                $this->inlineItems[] = $source;
                 continue;
             }
 
@@ -143,7 +140,7 @@ class MinifyHelper {
             }
 
             $this->includedItems[] = $name;
-            
+
             if ($pkg) {
                 $name .= ";$pkg";
             }
@@ -157,7 +154,7 @@ class MinifyHelper {
             $uh = Loader::helper("concrete/urls");
             $url = $uh->getToolsUrl("minify", "nuevebit") . "?f=";
         }
-        
+
         $currentTheme = View::getInstance()->getThemeHandle();
 
         if ($targetFiles["css"]) {
@@ -165,13 +162,13 @@ class MinifyHelper {
         } else {
             $cssUrl = null;
         }
-        
+
         if ($targetFiles["js"]) {
             $jsUrl = $url . $targetFiles["js"] . "&amp;t=js&amp;v=$currentTheme";
         } else {
             $jsUrl = null;
         }
-        
+
         return array($cssUrl, $jsUrl);
     }
 
@@ -182,6 +179,7 @@ class MinifyHelper {
             $targetFiles[$type] .= ",$file";
         }
     }
+
 }
 
 ?>
