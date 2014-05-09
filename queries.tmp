@@ -1,3 +1,0 @@
-select s.ID, s.value from atSelectOptions s, atSelectOptionsSelected o, CollectionAttributeValues cav, CollectionVersions cv where o.atSelectOptionID = s.ID and o.avID = cav.avID and cav.cvID = cv.cvID and cv.cvIsApproved = 1 and cv.cID = cav.cID and exists (select * from atNumber n, CollectionAttributeValues cav2 where n.value = 2013 and cav2.cID = cv.cID and cav2.cvID = cv.cvID and cv.cvIsApproved = 1 and cav2.avID = n.avID) group by s.value;
-
-select n.* from atNumber n, CollectionAttributeValues cav, CollectionVersions cv where n.avID = cav.avID and cav.cID = cv.cID and cav.cvID = cv.cvID and cv.cvIsApproved = 1 group by n.value;

@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $nav = Loader::helper('navigation');
 $class = "active";
-
 ?>
 
 <div class="carousel slide" id="carousel<?= $bID ?>">
@@ -17,26 +16,33 @@ $class = "active";
 
             <div class="item <?= $class ?>">	
 
-                <img src="<?= $f->getRelativePath() ?>"/>
+                <?php if ($imgInfo["url"]) { ?>
+                    <a href="<?= $imgInfo["url"]; ?>">
+                    <?php } ?>
+                    <img src="<?= $f->getRelativePath() ?>"/>
+                    <?php if ($imgInfo["url"]) { ?>
+                    </a>
+                <?php } ?>
 
             </div>	
 
             <?php $class = "";
-        } ?>
+        }
+        ?>
 
     </div>
 
 
 </div>
 
-<?php 
+<?php
 $duration = $duration * 1000;
 ?>
 
 <script type="text/javascript">
     $(window).load(function() {
         $("#carousel<?= $bID ?>").carousel({
-            interval: <?=$duration?>
+            interval: <?= $duration ?>
         });
     });
 </script>
