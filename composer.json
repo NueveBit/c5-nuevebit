@@ -5,7 +5,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "http://nuevebit.com/composer"
+            "url": "http://repos.nuevebit.com/composer"
         }
     ],
     "require": {
