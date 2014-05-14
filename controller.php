@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 class C5NuevebitPackage extends Package {
 
-	protected $pkgHandle = 'nuevebit';
+	protected $pkgHandle = 'c5-nuevebit';
 	protected $appVersionRequired = '5.5.0';
 	protected $pkgVersion = '0.6'; 
 	
