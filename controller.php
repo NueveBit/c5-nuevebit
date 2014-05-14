@@ -65,10 +65,6 @@ class C5NuevebitPackage extends Package {
 	public function install() {
 		$pkg = parent::install();
 
-        $args = array("akHandle" => "gallery_thumbnail", "akName" => "Gallery Thumbnail", "akIsSearchable" => "1");
-        $type = AttributeType::getByHandle("image_file");
-        CollectionAttributeKey::add($type, $args, $this);
-        
         // install 'one page' block
 		BlockType::installBlockTypeFromPackage('nuevebit_page_list', $pkg);
 		BlockType::installBlockTypeFromPackage('nuevebit_gallery', $pkg);
