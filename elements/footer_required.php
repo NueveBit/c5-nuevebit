@@ -8,7 +8,7 @@ if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingC
 
 <?php
 
-$mh = Loader::helper("minify", "nuevebit");
+$mh = Loader::helper("minify", "c5-nuevebit");
 
 if (defined('MINIFY_ENABLE') && MINIFY_ENABLE) {
     $items = array_merge($this->getHeaderItems(), $this->getFooterItems());

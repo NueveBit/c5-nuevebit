@@ -152,7 +152,7 @@ class MinifyHelper {
             $url = DIR_REL . '/' . MINIFY_SCRIPT . '?f=';
         } else {
             $uh = Loader::helper("concrete/urls");
-            $url = $uh->getToolsUrl("minify", "nuevebit") . "?f=";
+            $url = $uh->getToolsUrl("minify", "c5-nuevebit") . "?f=";
         }
 
         $currentTheme = View::getInstance()->getThemeHandle();

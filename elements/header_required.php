@@ -66,7 +66,7 @@ if (isset($isEditMode)) {
 </script>
 
 <?php
-$assets = Loader::helper('assets', "nuevebit");
+$assets = Loader::helper('assets', "c5-nuevebit");
 
 if ($u->isRegistered()) {
     $this->addHeaderItem($assets->css('ccm.base.css'), 'CORE');
@@ -109,7 +109,7 @@ if (is_object($cp)) {
 
 $headerItems = $this->getHeaderItems();
 $headerJsItems = $assets->getHeaderJsItems();
-$mh = Loader::helper("minify", "nuevebit");
+$mh = Loader::helper("minify", "c5-nuevebit");
 $minifyEnable = defined('MINIFY_ENABLE') && MINIFY_ENABLE;
 $useCdn = defined('MINIFY_USE_CDN') && MINIFY_USE_CDN;
 
