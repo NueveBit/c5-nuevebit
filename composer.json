@@ -2,12 +2,6 @@
     "name": "nuevebit/c5-nuevebit",
     "description": "Core Concrete5 elements for nuevebit websites",
     "type": "concrete5-package",
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://repos.nuevebit.com/composer"
-        }
-    ],
     "require": {
         "concrete5/concrete5": "~5.6"
     }
