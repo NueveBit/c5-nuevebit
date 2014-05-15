@@ -1,5 +1,7 @@
 *.swp
 *.swo
 
-# configuración de netbeans privada
-/nbproject/private/
+# configuración de netbeans 
+/nbproject/
+
+
