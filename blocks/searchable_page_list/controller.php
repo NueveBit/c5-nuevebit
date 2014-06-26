@@ -55,7 +55,7 @@ class SearchablePageListBlockController extends BlockController {
             $row['displayAliases'] = $this->displayAliases;
         }
 
-        Loader::model("nuevebit_page_list", "nuevebit");
+        Loader::model("nuevebit_page_list", "c5-nuevebit");
         $pl = new NuevebitPageList();
         $pl->setNameSpace('b' . $this->bID);
 
